@@ -16,13 +16,13 @@ import os
 import gdown
 
 # Download model if not present
-if not os.path.exists("fine_tuned_10class_model.h5"):
+if not os.path.exists("skin_cancer_model.h5"):
     # Replace with your Google Drive file ID
-    file_id = "https://drive.google.com/file/d/1_vdxwP2LzniWAvfPCkeA_UEwjOfFH8Mj/view?usp=drive_link"
+    file_id = "1_vdxwP2LzniWAvfPCkeA_UEwjOfFH8Mj"
     url = f"https://drive.google.com/uc?id={file_id}"
     gdown.download(url, "skin_cancer_model.h5", quiet=False)
 
-model = tf.keras.models.load_model("fine_tuned_10class_model.h5")
+model = tf.keras.models.load_model("skin_cancer_model.h5")
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
