@@ -12,7 +12,17 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import io
+import os
+import gdown
 
+# Download model if not present
+if not os.path.exists("fine_tuned_10class_model.h5"):
+    # Replace with your Google Drive file ID
+    file_id = "https://drive.google.com/file/d/1_vdxwP2LzniWAvfPCkeA_UEwjOfFH8Mj/view?usp=drive_link"
+    url = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(url, "skin_cancer_model.h5", quiet=False)
+
+model = tf.keras.models.load_model("fine_tuned_10class_model.h5")
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
