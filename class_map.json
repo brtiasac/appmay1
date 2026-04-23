@@ -1,0 +1,38 @@
+{
+  "classes": [
+    "actinic keratosis",
+    "basal cell carcinoma",
+    "dermatofibroma",
+    "eczema",
+    "folliculitis",
+    "melanocytic nevus",
+    "psoriasis",
+    "pyogenic granuloma",
+    "seborrheic keratosis",
+    "squamous cell carcinoma"
+  ],
+  "class2idx": {
+    "actinic keratosis": 0,
+    "basal cell carcinoma": 1,
+    "dermatofibroma": 2,
+    "eczema": 3,
+    "folliculitis": 4,
+    "melanocytic nevus": 5,
+    "psoriasis": 6,
+    "pyogenic granuloma": 7,
+    "seborrheic keratosis": 8,
+    "squamous cell carcinoma": 9
+  },
+  "idx2class": {
+    "0": "actinic keratosis",
+    "1": "basal cell carcinoma",
+    "2": "dermatofibroma",
+    "3": "eczema",
+    "4": "folliculitis",
+    "5": "melanocytic nevus",
+    "6": "psoriasis",
+    "7": "pyogenic granuloma",
+    "8": "seborrheic keratosis",
+    "9": "squamous cell carcinoma"
+  }
+}
