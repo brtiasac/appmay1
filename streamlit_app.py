@@ -22,12 +22,11 @@ import os
 
 @st.cache_resource
 def load_model():
-    # Download model from Google Drive if not already present
     model_path = "best_model.pth"
     if not os.path.exists(model_path):
         with st.spinner("Downloading model weights... (first load only)"):
             gdown.download(
-                id="YOUR_FILE_ID_HERE",   # ← paste your Drive file ID here
+                id="1WOcN14qduuF0XypP_J1MfAUml5GSLAaT",
                 output=model_path,
                 quiet=False
             )
