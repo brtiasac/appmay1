@@ -3,7 +3,9 @@ import torch
 import timm
 import json
 import io
+import os
 import numpy as np
+import gdown
 from PIL import Image
 import torchvision.transforms as T
 import matplotlib.pyplot as plt
@@ -16,10 +18,6 @@ st.set_page_config(
 )
 
 # ── Load model and class map ───────────────────────────────────────────────────
-@st.cache_resource
-import gdown
-import os
-
 @st.cache_resource
 def load_model():
     model_path = "best_model.pth"
@@ -40,6 +38,8 @@ def load_model():
     model.load_state_dict(torch.load(model_path, map_location="cpu"))
     model.eval()
     return model, idx2class, classes
+
+model, idx2class, classes = load_model()
 
 # ── Transform ──────────────────────────────────────────────────────────────────
 eval_tfm = T.Compose([
