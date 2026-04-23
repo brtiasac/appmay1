@@ -17,18 +17,30 @@ st.set_page_config(
 
 # ── Load model and class map ───────────────────────────────────────────────────
 @st.cache_resource
+import gdown
+import os
+
+@st.cache_resource
 def load_model():
+    # Download model from Google Drive if not already present
+    model_path = "best_model.pth"
+    if not os.path.exists(model_path):
+        with st.spinner("Downloading model weights... (first load only)"):
+            gdown.download(
+                id="YOUR_FILE_ID_HERE",   # ← paste your Drive file ID here
+                output=model_path,
+                quiet=False
+            )
+
     with open("class_map.json") as f:
         mapping = json.load(f)
     idx2class = {int(k): v for k, v in mapping["idx2class"].items()}
     classes   = mapping["classes"]
 
     model = timm.create_model("efficientnet_b3", pretrained=False, num_classes=len(classes))
-    model.load_state_dict(torch.load("best_model.pth", map_location="cpu"))
+    model.load_state_dict(torch.load(model_path, map_location="cpu"))
     model.eval()
     return model, idx2class, classes
-
-model, idx2class, classes = load_model()
 
 # ── Transform ──────────────────────────────────────────────────────────────────
 eval_tfm = T.Compose([
