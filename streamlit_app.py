@@ -10,14 +10,14 @@ from PIL import Image
 import torchvision.transforms as T
 import matplotlib.pyplot as plt
 
-# ── Page config ────────────────────────────────────────────────────────────────
+#Page configuration
 st.set_page_config(
     page_title="Skin Condition Classifier",
     page_icon="🔬",
     layout="centered"
 )
 
-# ── Load model and class map ───────────────────────────────────────────────────
+#Loading the class map and the model
 @st.cache_resource
 def load_model():
     model_path = "best_model.pth"
@@ -32,7 +32,7 @@ def load_model():
     with open("class_map.json") as f:
         mapping = json.load(f)
     idx2class = {int(k): v for k, v in mapping["idx2class"].items()}
-    classes   = mapping["classes"]
+    classes = mapping["classes"]
 
     model = timm.create_model("efficientnet_b3", pretrained=False, num_classes=len(classes))
     model.load_state_dict(torch.load(model_path, map_location="cpu"))
@@ -41,7 +41,7 @@ def load_model():
 
 model, idx2class, classes = load_model()
 
-# ── Transform ──────────────────────────────────────────────────────────────────
+#Image transformer
 eval_tfm = T.Compose([
     T.Resize(330),
     T.CenterCrop(300),
@@ -50,7 +50,7 @@ eval_tfm = T.Compose([
                 [0.229, 0.224, 0.225]),
 ])
 
-# ── Predict function ───────────────────────────────────────────────────────────
+#Prediction function
 def predict(img, top_k=5):
     tensor = eval_tfm(img).unsqueeze(0)
     with torch.no_grad():
@@ -59,7 +59,7 @@ def predict(img, top_k=5):
     top_idx = probs.argsort()[::-1][:top_k]
     return [(idx2class[i], float(probs[i])) for i in top_idx]
 
-# ── UI ─────────────────────────────────────────────────────────────────────────
+#Page contents
 st.title("🔬 Skin Condition Classifier")
 st.write(
     "Upload a skin image and the model will return the top 5 most likely "
@@ -94,10 +94,10 @@ if uploaded:
             st.write(f"**{rank}. {label.title()}**")
             st.progress(prob, text=f"{prob:.1%}")
 
-    # Bar chart
+    # Prediction bar chart
     st.subheader("Prediction probabilities")
     labels_p = [r[0].title() for r in results]
-    probs_p  = [r[1] for r in results]
+    probs_p = [r[1] for r in results]
 
     fig, ax = plt.subplots(figsize=(8, 3))
     colours = ["#2196F3" if i == 0 else "#90CAF9" for i in range(len(labels_p))]
