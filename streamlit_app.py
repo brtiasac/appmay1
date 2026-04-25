@@ -9,13 +9,12 @@ import numpy as np
 import gdown
 from PIL import Image
 import torchvision.transforms as T
-import matplotlib.pyplot as plt
 
 # Page configuration
 st.set_page_config(
-    page_title = "SpotChek - AI Skin Lesion Detection App",
-    page_icon = "🔍",
-    layout = "centered"
+    page_title="SpotChek - AI Skin Lesion Detection App",
+    page_icon="🔍",
+    layout="centered"
 )
 
 # Load class map and model (cached so it only loads once per session)
@@ -25,9 +24,9 @@ def load_model():
     # Download model weights
     if not os.path.exists(model_path):
         gdown.download(
-            id = "1WOcN14qduuF0XypP_J1MfAUml5GSLAaT",
-            output = model_path,
-            quiet = False
+            id="1WOcN14qduuF0XypP_J1MfAUml5GSLAaT",
+            output=model_path,
+            quiet=False
         )
 
     with open("class_map.json") as f:
@@ -39,10 +38,10 @@ def load_model():
     model = timm.create_model("efficientnet_b3", pretrained=False, num_classes=len(classes))
     model.load_state_dict(torch.load(model_path, map_location="cpu"))
     model.eval()
-    return model, idx2class, classes
+    return model, idx2class
 
 # Load everything when the app starts
-model, idx2class, classes = load_model()
+model, idx2class = load_model()
 
 # Transformations to apply to uploaded images before feeding to the model
 eval_tfm = T.Compose([
@@ -54,14 +53,14 @@ eval_tfm = T.Compose([
 ])
 
 # Prediction function
-def predict(img, top_k=5):
+def predict(img):
     tensor = eval_tfm(img).unsqueeze(0)
     # Run model inference
     with torch.no_grad():
         logits = model(tensor)
         probs = torch.softmax(logits, dim=1).squeeze().numpy()
     # Select top 5 predicted classes
-    top_idx = probs.argsort()[::-1][:top_k]
+    top_idx = probs.argsort()[::-1][:5]
     return [(idx2class[i], float(probs[i])) for i in top_idx]
 
 # Add page contents
@@ -106,7 +105,7 @@ if uploaded:
 
     with col2:
         with st.spinner("Analysing image..."):
-            results = predict(img, top_k=5)
+            results = predict(img)
     # Create bar chart to visualise predictions
         st.subheader("Top 5 Predictions")
         for rank, (label, prob) in enumerate(results, 1):
