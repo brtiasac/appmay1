@@ -1,4 +1,4 @@
-# Importing the neededed libraries
+# Import needed libraries
 import streamlit as st
 import torch
 import timm
@@ -18,12 +18,12 @@ st.set_page_config(
     layout="centered"
 )
 
-# Loading the class map and the model
+# Load class map and model
 # Cached so it only loads once per session
 @st.cache_resource
 def load_model():
     model_path = "best_model.pth"
-    # Downloading model weights
+    # Download model weights
     if not os.path.exists(model_path):
         gdown.download(
             id="1WOcN14qduuF0XypP_J1MfAUml5GSLAaT",
@@ -36,13 +36,13 @@ def load_model():
     idx2class = {int(k): v for k, v in mapping["idx2class"].items()}
     classes = mapping["classes"]
 
-    # Creating the model architecture
+    # Create model architecture
     model = timm.create_model("efficientnet_b3", pretrained=False, num_classes=len(classes))
     model.load_state_dict(torch.load(model_path, map_location="cpu"))
     model.eval()
     return model, idx2class, classes
 
-# Loading everything when the app starts
+# Load everything when the app starts
 model, idx2class, classes = load_model()
 
 # Transformations to apply to uploaded images before feeding to the model
@@ -57,15 +57,15 @@ eval_tfm = T.Compose([
 # Prediction function
 def predict(img, top_k=5):
     tensor = eval_tfm(img).unsqueeze(0)
-    # Running model inference
+    # Run model inference
     with torch.no_grad():
         logits = model(tensor)
         probs  = torch.softmax(logits, dim=1).squeeze().numpy()
-    # Get top k predictions
+    # Select top 5 predicted classes
     top_idx = probs.argsort()[::-1][:top_k]
     return [(idx2class[i], float(probs[i])) for i in top_idx]
 
-# Adding page contents
+# Add page contents
 st.title("🔬 Skin Condition Classifier")
 st.write(
     "Upload a skin image and the model will return the top 5 most likely "
@@ -78,16 +78,15 @@ st.warning(
     "for professional medical advice or diagnosis."
 )
 
-# Prompting user to upload image for prediction
+# Prompt user to upload image for prediction
 uploaded = st.file_uploader(
     "Upload a skin image",
     type=["jpg", "jpeg", "png", "webp", "bmp"]
 )
 
-# Processing uploaded image and displaying prediction
+# Process uploaded image and displaying prediction
 if uploaded:
     img = Image.open(io.BytesIO(uploaded.read())).convert("RGB")
-    # Separating page columns to display user images and predictions
     col1, col2 = st.columns(2)
 
     with col1:
@@ -96,7 +95,7 @@ if uploaded:
     with col2:
         with st.spinner("Analysing image..."):
             results = predict(img, top_k=5)
-    # Creating bar chart to visualise predictions
+    # Create bar chart to visualise prediction
         st.subheader("Top 5 predictions")
         for rank, (label, prob) in enumerate(results, 1):
             st.write(f"**{rank}. {label.title()}**")
