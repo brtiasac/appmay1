@@ -13,9 +13,9 @@ import matplotlib.pyplot as plt
 
 # Page configuration
 st.set_page_config(
-    page_title="Skin Condition Classifier",
-    page_icon="🔬",
-    layout="centered"
+    page_title = "SpotChek - AI Skin Lesion Detection App",
+    page_icon = "🔍",
+    layout = "centered"
 )
 
 # Load class map and model
@@ -26,9 +26,9 @@ def load_model():
     # Download model weights
     if not os.path.exists(model_path):
         gdown.download(
-            id="1WOcN14qduuF0XypP_J1MfAUml5GSLAaT",
-            output=model_path,
-            quiet=False
+            id = "1WOcN14qduuF0XypP_J1MfAUml5GSLAaT",
+            output = model_path,
+            quiet = False
         )
 
     with open("class_map.json") as f:
@@ -60,28 +60,42 @@ def predict(img, top_k=5):
     # Run model inference
     with torch.no_grad():
         logits = model(tensor)
-        probs  = torch.softmax(logits, dim=1).squeeze().numpy()
+        probs = torch.softmax(logits, dim=1).squeeze().numpy()
     # Select top 5 predicted classes
     top_idx = probs.argsort()[::-1][:top_k]
     return [(idx2class[i], float(probs[i])) for i in top_idx]
 
 # Add page contents
-st.title("🔬 Skin Condition Classifier")
+st.title("SpotChek")
+st.subheader("AI Skin Lesion Detection App")
 st.write(
-    "Upload a skin image and the model will return the top 5 most likely "
-    "conditions based on training across the SCIN, Fitzpatrick17k, and DDI datasets."
+    "Upload an image of your skin concern and our model will show the 5 "
+    "most likely skin lesion matches from our 10 categories."
 )
+
+with st.expander("📋 View all 10 skin condition categories"):
+    st.markdown("""
+        - Psoriasis
+        - Eczema
+        - Basal Cell Carcinoma
+        - Squamous Cell Carcinoma
+        - Folliculitis
+        - Melanocytic Nevus
+        - Actinic Keratosis
+        - Seborrheic Keratosis
+        - Pyogenic Granuloma
+        - Dermatofibroma
+    """)
 
 st.warning(
     "⚠️ This tool is for educational and research purposes only. "
-    "It is not a medical device and should not be used as a substitute "
-    "for professional medical advice or diagnosis."
+    "It should not be used as a substitute for professional medical diagnosis."
 )
 
 # Prompt user to upload image for prediction
 uploaded = st.file_uploader(
-    "Upload a skin image",
-    type=["jpg", "jpeg", "png", "webp", "bmp"]
+    "Upload an image of your skin concern below:",
+    type = ["jpg", "jpeg", "png", "webp", "bmp"]
 )
 
 # Process uploaded image and display prediction
@@ -96,7 +110,7 @@ if uploaded:
         with st.spinner("Analysing image..."):
             results = predict(img, top_k=5)
     # Create bar chart to visualise predictions
-        st.subheader("Top 5 predictions")
+        st.subheader("Top 5 Predictions")
         for rank, (label, prob) in enumerate(results, 1):
             st.write(f"**{rank}. {label.title()}**")
             st.progress(prob, text=f"{prob:.1%}")
