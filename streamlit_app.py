@@ -84,7 +84,7 @@ uploaded = st.file_uploader(
     type=["jpg", "jpeg", "png", "webp", "bmp"]
 )
 
-# Process uploaded image and displaying prediction
+# Process uploaded image and display prediction
 if uploaded:
     img = Image.open(io.BytesIO(uploaded.read())).convert("RGB")
     col1, col2 = st.columns(2)
@@ -95,7 +95,7 @@ if uploaded:
     with col2:
         with st.spinner("Analysing image..."):
             results = predict(img, top_k=5)
-    # Create bar chart to visualise prediction
+    # Create bar chart to visualise predictions
         st.subheader("Top 5 predictions")
         for rank, (label, prob) in enumerate(results, 1):
             st.write(f"**{rank}. {label.title()}**")
