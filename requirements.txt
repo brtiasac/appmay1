@@ -3,6 +3,5 @@ torch
 torchvision
 timm
 Pillow
-matplotlib
 numpy
 gdown
