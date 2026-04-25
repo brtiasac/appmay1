@@ -66,14 +66,13 @@ def predict(img, top_k=5):
     return [(idx2class[i], float(probs[i])) for i in top_idx]
 
 # Add page contents
-st.title("SpotChek")
-st.subheader("AI Skin Lesion Detection App")
+st.title("SpotChek - AI Skin Lesion Detection App")
 st.write(
     "Upload an image of your skin concern and our model will show the 5 "
     "most likely skin lesion matches from our 10 categories."
 )
 
-with st.expander("📋 View all 10 skin condition categories"):
+with st.expander("View all 10 categories >"):
     st.markdown("""
         - Psoriasis
         - Eczema
