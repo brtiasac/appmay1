@@ -104,8 +104,7 @@ if uploaded:
         st.image(img, caption="Uploaded image", use_column_width=True)
 
     with col2:
-        with st.spinner("Analysing image..."):
-            results = predict(img)
+        results = predict(img)
     # Create bar chart to visualise predictions
         st.subheader("Top 5 Predictions")
         for rank, (label, prob) in enumerate(results, 1):
