@@ -18,8 +18,7 @@ st.set_page_config(
     layout = "centered"
 )
 
-# Load class map and model
-# Cached so it only loads once per session
+# Load class map and model (cached so it only loads once per session)
 @st.cache_resource
 def load_model():
     model_path = "best_model.pth"
