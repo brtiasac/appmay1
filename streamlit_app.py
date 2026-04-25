@@ -97,22 +97,8 @@ if uploaded:
     with col2:
         with st.spinner("Analysing image..."):
             results = predict(img, top_k=5)
-
+    # Creating bar chart to visualise predictions
         st.subheader("Top 5 predictions")
         for rank, (label, prob) in enumerate(results, 1):
             st.write(f"**{rank}. {label.title()}**")
             st.progress(prob, text=f"{prob:.1%}")
-    # Creating bar chart to visualise predictions
-    st.subheader("Prediction probabilities")
-    labels_p = [r[0].title() for r in results]
-    probs_p = [r[1] for r in results]
-
-    fig, ax = plt.subplots(figsize=(8, 3))
-    colours = ["#2196F3" if i == 0 else "#90CAF9" for i in range(len(labels_p))]
-    ax.barh(labels_p[::-1], probs_p[::-1], color=colours[::-1])
-    ax.set_xlim(0, 1)
-    ax.set_xlabel("Probability")
-    for i, (prob, label) in enumerate(zip(probs_p[::-1], labels_p[::-1])):
-        ax.text(prob + 0.01, i, f"{prob:.1%}", va="center", fontsize=9)
-    plt.tight_layout()
-    st.pyplot(fig)
