@@ -25,12 +25,11 @@ def load_model():
     model_path = "best_model.pth"
     # Downloading model weights
     if not os.path.exists(model_path):
-        with st.spinner("Downloading model weights... (first load only)"):
-            gdown.download(
-                id="1WOcN14qduuF0XypP_J1MfAUml5GSLAaT",
-                output=model_path,
-                quiet=False
-            )
+        gdown.download(
+            id="1WOcN14qduuF0XypP_J1MfAUml5GSLAaT",
+            output=model_path,
+            quiet=False
+        )
 
     with open("class_map.json") as f:
         mapping = json.load(f)
