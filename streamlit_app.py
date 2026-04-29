@@ -24,7 +24,7 @@ def load_model():
     # Download model weights
     if not os.path.exists(model_path):
         gdown.download(
-            id="1WOcN14qduuF0XypP_J1MfAUml5GSLAaT",
+            id="1WWULbjj4nm3t2N9BDZJ8G-MLzSe9T-Ih",
             output=model_path,
             quiet=False
         )
